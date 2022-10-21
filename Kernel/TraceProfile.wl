@@ -6,7 +6,7 @@
 
 BeginPackage["WolframAlphaMath`TraceProfile`"];
 
-TraceProfile::usage = "";
+TraceProfile::usage = "Profile one or more functions during an evaluation of some code.";
 TraceProfileData::usage = "";
 TraceProfileVerbose::usage = "";
 
