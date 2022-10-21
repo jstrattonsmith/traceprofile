@@ -18,6 +18,40 @@ Begin["`Private`"];
 
 
 (* ::Subsubsection::Closed:: *)
+(*TraceProfileFormat[
+*)
+
+
+With[{$fmts = Alternatives @@ $OutputForms},
+(* ClearAll[TraceProfileFormat] *)
+	SetAttributes[TraceProfileFormat, HoldAllComplete];
+	TraceProfileFormat[
+		{syms__Symbol},
+		fmt:$fmts,
+		code_
+	] := Internal`InheritedBlock[{syms},
+		(FormatValues[#] = MapIndexed[
+			Function[{value, index},
+				value /. {
+					HoldPattern[RuleDelayed[lhs_HoldPattern, rhs_]] :> RuleDelayed[
+						lhs, (Print[index]; rhs)
+					]
+				}
+			],
+			FormatValues[#]
+		])& /@ {syms};
+		With[{lbl = StringTemplate["Out[`1`]//`2`="][Evaluate@$Line, fmt]},
+			CellPrint[Cell[
+				RawBoxes@MakeBoxes[code, fmt],
+				"Output",
+				CellLabel -> lbl
+			]]
+		]
+	]
+]
+
+
+(* ::Subsubsection::Closed:: *)
 (*TraceProfile*)
 
 
